@@ -594,8 +594,10 @@ class Watersampleinventory(models.Model):
 
 
 class Worker(models.Model):
-    idworker = models.IntegerField(db_column='idWorker', primary_key=True, blank=True, null=False)  # Field name made lowercase.
+    idworker = models.IntegerField(db_column='idWorker', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     worker = models.TextField(db_column='Worker', unique=True)  # Field name made lowercase.
+    workertype = models.TextField(db_column='WorkerType', blank=True, null=True)  # Field name made lowercase.
+    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

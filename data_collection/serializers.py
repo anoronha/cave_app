@@ -6,6 +6,12 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
         model = Site
         fields = ('idsite', 'site', 'active')
 
+
+class WorkerSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Site
+        fields = ('idworker', 'worker', 'workertype', 'active')
+
 class LocationSerializer(serializers.HyperlinkedModelSerializer):
     sites = SiteSerializer(many=True, read_only=True)
 

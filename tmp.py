@@ -350,6 +350,7 @@ class Lab(models.Model):
     labname = models.TextField(db_column='LabName', unique=True)  # Field name made lowercase.
     institution = models.TextField(db_column='Institution', blank=True, null=True)  # Field name made lowercase.
     pi = models.TextField(db_column='PI', blank=True, null=True)  # Field name made lowercase.
+    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -417,6 +418,7 @@ class Labinstrumentstandard(models.Model):
 class Location(models.Model):
     idlocation = models.IntegerField(db_column='idLocation', primary_key=True, blank=True, null=True)  # Field name made lowercase.
     location = models.TextField(db_column='Location', unique=True)  # Field name made lowercase.
+    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -551,6 +553,7 @@ class Site(models.Model):
     ylocation = models.TextField(db_column='YLocation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     sitecode = models.TextField(db_column='SiteCode', blank=True, null=True)  # Field name made lowercase.
     note = models.TextField(db_column='Note', blank=True, null=True)  # Field name made lowercase.
+    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -593,10 +596,21 @@ class Watersampleinventory(models.Model):
 class Worker(models.Model):
     idworker = models.IntegerField(db_column='idWorker', primary_key=True, blank=True, null=True)  # Field name made lowercase.
     worker = models.TextField(db_column='Worker', unique=True)  # Field name made lowercase.
+    workertype = models.TextField(db_column='WorkerType', blank=True, null=True)  # Field name made lowercase.
+    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Worker'
+
+
+class Workertype(models.Model):
+    idworkertype = models.IntegerField(db_column='idWorkerType', primary_key=True, blank=True, null=True)  # Field name made lowercase.
+    workertype = models.TextField(db_column='WorkerType', unique=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'WorkerType'
 
 
 class D18Owaterresults(models.Model):

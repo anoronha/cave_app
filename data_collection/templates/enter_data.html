@@ -1,18 +1,34 @@
+#begin date
+#end date
+#checkboxes of who went on trip
+#select location from drop down menu
+#checked check boxes with all active sites in location appears, exclude cave rooms
+#approve button, generates 1) field trip with location, begin date, end date 2)samplenamemasterlist entries with sites and field trip
+
 {% extends 'layouts/base.html' %}
 {% block title %}Enter - {{ block.super }}{% endblock %}
 {% block content %}
-  <h2>Field Trip Location:</h2>
-  <form>
+<form>
+  Trip Begin:
+  <input type="date" name="BeginFieldTrip">
+  Trip End:
+  <input type="date" name="EndFieldTrip">
+  <div id="Worker">
+  {% for work in work %}
+    <input type="checkbox" name="worker" value="{{work.Worker}}">{{work.Worker}}<br>
+  {% endfor %}
+  </div>
+  Field Trip Location:
   <select name="Location">
     <option value="unset">Pick a site</option>
     {% for loc in loc %}
       <option value="{{loc.idlocation}}">{{loc.location}}</option>
-    {% endfor %}
+      {% endfor %}
   </select>
   <div id="Checkboxes" class=hidden>
-    {% for sit in sit %}
-      <input type="checkbox" name="site" value="{{sit.Site}}">{{sit.site}}<br>
-    {% endfor %}
+  {% for sit in sit %}
+    <input type="checkbox" name="site" value="{{sit.Site}}">{{sit.site}}<br>
+  {% endfor %}
   </div>
 </form>
   <script>
