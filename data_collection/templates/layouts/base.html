@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!doctype html>
+<html>
+<head>
+  <title>
+    {% block title %}Guam Groundwater{% endblock %}
+  </title>
+  <link rel="stylesheet" href="{%static 'css/style.css' %}" />
+  {%block header %}{% endblock %}
+</head>
+<body>
+  <div class="page-header">
+    <h1>Guam Groundwater Research Project</h1>
+  </div>
+  <nav>
+    <ul>
+      <div class="row">
+        <div class="col-md-2"><a href="{% url 'home' %}">Home</a></div>
+        <div class="col-md-2"><a href="{% url 'enter-data' %}">Enter Data</a></div>
+        <div class="col-md-2"><a href="{% url 'download-data' %}">Download Data</a></div>
+      </div>
+    </ul>
+  </nav>
+  {%block content %}{% endblock %}
+  {%block footer %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,8 @@
+*.pyc
+/cave_app/__pycache__
+/cave_app/secret_settings.py
+cave_app_env
+db.sqlite3
+/static
+.DS_Store
+guam_groundwater.db
