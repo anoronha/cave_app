@@ -15,7 +15,7 @@
   <input type="date" name="EndFieldTrip">
   <div id="Worker">
   {% for work in work %}
-    <input type="checkbox" name="worker" value="{{work.Worker}}">{{work.Worker}}<br>
+    <input type="checkbox" name="worker" value="{{work.worker}}">{{work.worker}}<br>
   {% endfor %}
   </div>
   Field Trip Location:
@@ -27,7 +27,7 @@
   </select>
   <div id="Checkboxes" class=hidden>
   {% for sit in sit %}
-    <input type="checkbox" name="site" value="{{sit.Site}}">{{sit.site}}<br>
+    <input type="checkbox" name="site" value="{{sit.site}}">{{sit.site}}<br>
   {% endfor %}
   </div>
 </form>
