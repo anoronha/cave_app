@@ -4,13 +4,13 @@ from data_collection.models import *
 # Create your views here.
 
 def enter_data(request):
-    loc = Location.objects.all()
-    sit = Site.objects.all()
-    work = Worker.objects.all()
+    location_all = Location.objects.exclude(active=0)
+    site_all = Site.objects.exclude(active=0)
+    worker_all = Worker.objects.exclude(active=0).exclude(workertype='Lab').order_by('-worker')
     return render(request, 'enter_data.html', {
-        'loc': loc,
-        'sit': sit,
-        'work': work,
+        'location_all': location_all,
+        'site_all': site_all,
+        'worker_all': worker_all,
     })
 
 def index(request):

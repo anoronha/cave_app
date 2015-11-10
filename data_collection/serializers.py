@@ -9,7 +9,7 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
 
 class WorkerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Site
+        model = Worker
         fields = ('idworker', 'worker', 'workertype', 'active')
 
 class LocationSerializer(serializers.HyperlinkedModelSerializer):

@@ -9,25 +9,33 @@
 {% block title %}Enter - {{ block.super }}{% endblock %}
 {% block content %}
 <form>
-  Trip Begin:
+  <b>Trip Begin:</b>
   <input type="date" name="BeginFieldTrip">
-  Trip End:
+  <br>
+  <br>
+  <br>
+  <b>Trip End:</b>
   <input type="date" name="EndFieldTrip">
+  <br>
+  <br>
+  <b>Crew:</b>
   <div id="Worker">
-  {% for work in work %}
-    <input type="checkbox" name="worker" value="{{work.worker}}">{{work.worker}}<br>
+  {% for entry in worker_all %}
+    <input type="checkbox" name="worker" value="{{entry.worker}}">{{entry.worker}}<br>
   {% endfor %}
   </div>
+  <br>
+  <br>
   Field Trip Location:
   <select name="Location">
     <option value="unset">Pick a site</option>
-    {% for loc in loc %}
-      <option value="{{loc.idlocation}}">{{loc.location}}</option>
+    {% for entry in location_all %}
+      <option value="{{entry.idlocation}}">{{entry.location}}</option>
       {% endfor %}
   </select>
   <div id="Checkboxes" class=hidden>
-  {% for sit in sit %}
-    <input type="checkbox" name="site" value="{{sit.site}}">{{sit.site}}<br>
+  {% for entry in site_all %}
+    <input type="checkbox" name="site" value="{{entry.site}}">{{entry.site}}<br>
   {% endfor %}
   </div>
 </form>

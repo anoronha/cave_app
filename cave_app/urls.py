@@ -8,7 +8,6 @@ router = routers.DefaultRouter()
 router.register(r'locations', api.LocationViewSet)
 router.register(r'sites', api.SiteViewSet)
 
-
 urlpatterns = [
     url(r'^$','data_collection.views.index',name='home'),
     url(r'^enter-data/$','data_collection.views.enter_data', name = 'enter-data'),
