@@ -5,7 +5,7 @@ from data_collection.models import *
 
 def enter_data(request):
     location_all = Location.objects.exclude(active=0)
-    site_all = Site.objects.exclude(active=0)
+    site_all = Site.objects.exclude(active=0).exclude(sitetype='cave room')
     worker_all = Worker.objects.exclude(active=0).exclude(workertype='Lab').order_by('-worker')
     return render(request, 'enter_data.html', {
         'location_all': location_all,

@@ -4,7 +4,7 @@ from rest_framework import serializers
 class SiteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Site
-        fields = ('idsite', 'site', 'active')
+        fields = ('idsite', 'site','sitetype', 'active')
 
 
 class WorkerSerializer(serializers.HyperlinkedModelSerializer):
@@ -13,8 +13,8 @@ class WorkerSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('idworker', 'worker', 'workertype', 'active')
 
 class LocationSerializer(serializers.HyperlinkedModelSerializer):
-    sites = SiteSerializer(many=True, read_only=True)
+    fk_Site_Location = SiteSerializer(many=True, read_only=True)
 
     class Meta:
         model = Location
-        fields = ('location', 'idlocation', 'sites', 'active')
+        fields = ('location', 'idlocation', 'fk_Site_Location', 'active')
