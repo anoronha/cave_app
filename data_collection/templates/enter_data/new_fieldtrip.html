@@ -8,19 +8,13 @@
 {% extends 'layouts/base.html' %}
 {% block title %}Enter - {{ block.super }}{% endblock %}
 {% block content %}
-<form>
+<form action="{% url 'enter_data' Fieldtrip.id %}" method="post">
+  {% csrf_token %}
   <b>Trip Begin:</b>
   <input type="date" name="BeginFieldTrip">
   <br><br><br>
   <b>Trip End:</b>
   <input type="date" name="EndFieldTrip">
-  <br><br>
-  <b>Crew:</b>
-  <div id="Worker">
-  {% for entry in worker_all %}
-    <input type="checkbox" name="Worker" value="{{entry.worker}}">{{entry.worker}}<br>
-  {% endfor %}
-  </div>
   <br>
   Field Trip Location:
   <select name="Location">
@@ -29,6 +23,7 @@
       <option value="{{entry.idlocation}}">{{entry.location}}</option>
       {% endfor %}
   </select>
+  <br><br>
   <div id="Checkboxes" class=hidden>
   {% for entry in site_all %}
     <input type="checkbox" name="site" value="{{entry.site}}">{{entry.site}}<br>

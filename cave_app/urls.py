@@ -10,8 +10,9 @@ router.register(r'sites', api.SiteViewSet)
 
 urlpatterns = [
     url(r'^$','data_collection.views.index',name='home'),
-    url(r'^enter-data/$','data_collection.views.enter_data', name = 'enter-data'),
+    url(r'^enter-data/new-fieldtrip$','data_collection.views.new_fieldtrip', name = 'new-fieldtrip'),
     url(r'^download-data/$',TemplateView.as_view(template_name='download_data.html'), name = 'download-data'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(router.urls, namespace="api")),
+    # url(r'^(?P<question_id>[0-9]+)/vote/$', views.new_FieldTrip, name='vote'),
 ]

@@ -35,6 +35,9 @@ class Analysis(models.Model):
     idanalysis = models.IntegerField(db_column='idAnalysis', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     analysis = models.TextField(db_column='Analysis', unique=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return self.analysis
+
     class Meta:
         managed = False
         db_table = 'Analysis'
@@ -43,6 +46,9 @@ class Analysis(models.Model):
 class Analyte(models.Model):
     idanalyte = models.IntegerField(db_column='idAnalyte', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     analyte = models.TextField(db_column='Analyte', unique=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return self.analyte
 
     class Meta:
         managed = False
@@ -243,6 +249,9 @@ class Fieldinstrumentname(models.Model):
     fieldinstrumentname = models.TextField(db_column='FieldInstrumentName', unique=True)  # Field name made lowercase.
     fieldinstrumenttype = models.ForeignKey('Fieldinstrumenttype', to_field="fieldinstrumenttype", related_name="fk_FieldInstrumentName_FieldInstrumentType", db_column='FieldInstrumentType')  # Field name made lowercase.
 
+    def __str__(self):
+        return self.fieldinstrumentname
+
     class Meta:
         managed = False
         db_table = 'FieldInstrumentName'
@@ -352,6 +361,9 @@ class Lab(models.Model):
     pi = models.ForeignKey('Worker', to_field="worker", related_name="fk_Lab_PI", db_column='PI', blank=True, null=True)  # Field name made lowercase.
     active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return self.labname
+
     class Meta:
         managed = False
         db_table = 'Lab'
@@ -361,6 +373,9 @@ class Labinstrument(models.Model):
     idlabinstrument = models.IntegerField(db_column='idLabInstrument', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     labinstrument = models.TextField(db_column='LabInstrument', unique=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return self.labinstrument
+
     class Meta:
         managed = False
         db_table = 'LabInstrument'
@@ -369,6 +384,9 @@ class Labinstrument(models.Model):
 class Labinstrumentinterface(models.Model):
     idlabinstrumentinterface = models.IntegerField(db_column='idLabInstrumentInterface', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     labinstrumentinterface = models.TextField(db_column='LabInstrumentInterface', unique=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return self.labinstrumentinterface
 
     class Meta:
         managed = False
@@ -419,6 +437,9 @@ class Location(models.Model):
     idlocation = models.IntegerField(db_column='idLocation', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     location = models.TextField(db_column='Location', unique=True)  # Field name made lowercase.
     active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return self.location
 
     class Meta:
         managed = False
@@ -530,6 +551,9 @@ class Samplenamemasterlist(models.Model):
     samplename = models.TextField(db_column='SampleName', unique=True)  # Field name made lowercase.
     sampletype = models.ForeignKey('Sampletype', to_field="sampletype", related_name="fk_SampleNameMasterList_SampleType", db_column='SampleType')  # Field name made lowercase.
 
+    def __str__(self):
+        return self.samplename
+
     class Meta:
         managed = False
         db_table = 'SampleNameMasterList'
@@ -538,6 +562,9 @@ class Samplenamemasterlist(models.Model):
 class Sampletype(models.Model):
     idsampletype = models.IntegerField(db_column='idSampleType', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     sampletype = models.TextField(db_column='SampleType', unique=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return self.sampletype
 
     class Meta:
         managed = False
@@ -555,6 +582,9 @@ class Site(models.Model):
     note = models.TextField(db_column='Note', blank=True, null=True)  # Field name made lowercase.
     active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return self.site
+
     class Meta:
         managed = False
         db_table = 'Site'
@@ -563,6 +593,9 @@ class Site(models.Model):
 class Sitetype(models.Model):
     idsitetype = models.IntegerField(db_column='idSiteType', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     sitetype = models.TextField(db_column='SiteType', unique=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return self.sitetype
 
     class Meta:
         managed = False
@@ -599,6 +632,9 @@ class Worker(models.Model):
     workertype = models.ForeignKey('Workertype', to_field="workertype", related_name="fk_Worker_WorkerType", db_column='WorkerType', blank=True, null=True)  # Field name made lowercase.
     active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
+    def __str__(self):
+        return self.worker
+
     class Meta:
         managed = False
         db_table = 'Worker'
@@ -607,6 +643,9 @@ class Worker(models.Model):
 class Workertype(models.Model):
     idworkertype = models.IntegerField(db_column='idWorkerType', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     workertype = models.TextField(db_column='WorkerType', unique=True)  # Field name made lowercase.
+
+    def __str__(self):
+        return self.workertype
 
     class Meta:
         managed = False
