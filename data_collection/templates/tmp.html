@@ -1,0 +1,21 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+<form action="{% url 'data_collection:enter_tmp' location.idlocation %}" method = "post">
+  {% csrf_token %}
+  <b>Trip Begin:</b>
+  <input type="date" name="BeginFieldTrip">
+  <br><br>
+  <b>Trip End:</b>
+  <input type="date" name="EndFieldTrip">
+  <br><br>
+  <b>Trip Location:</b>
+  <select name="Location">
+    <option value="unset">Pick a site</option>
+    {% for entry in location_all %}
+      <option value="{{entry.idlocation}}">{{entry.location}}</option>
+      {% endfor %}
+  </select>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

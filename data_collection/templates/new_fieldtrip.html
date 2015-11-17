@@ -8,7 +8,7 @@
 {% extends 'layouts/base.html' %}
 {% block title %}Enter - {{ block.super }}{% endblock %}
 {% block content %}
-<form action="{% url 'enter_data' Fieldtrip.id %}" method="post">
+<form action="{% url 'new_FieldTrip' Fieldtrip.idfieldtrip %}" method="post">
   {% csrf_token %}
   <b>Trip Begin:</b>
   <input type="date" name="BeginFieldTrip">
