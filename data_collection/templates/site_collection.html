@@ -21,12 +21,15 @@
   </select>
   <br><br><br>
   Sites sampled:
+  <div id="Checkboxes" class=hidden>
+  </div>
+  <br><br>
   <b>Note:<b>
   <input type="text" name="note">
   <br><br>
   <input type="submit" value="Submit">
 </form>
-<!-- <script>
+<script>
 $(function() {
   var $site = $('div#Checkboxes');
   var $loc = $('select[name="Location"]');
@@ -50,5 +53,5 @@ $(function() {
     })
   })
 });
-</script> -->
+</script>
 {% endblock %}
