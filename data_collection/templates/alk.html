@@ -1,0 +1,10 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+<form action="/alk/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

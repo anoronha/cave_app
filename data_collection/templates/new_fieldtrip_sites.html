@@ -1,0 +1,22 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+<form action="/new-fieldtrip/select-sites/" method="post">
+  {% csrf_token %}
+  <h4>Sites Sampled</h4>
+  {{ sites_form.as_p }}
+  <h4>Field Team Members</h4>
+  {{ worker_form.as_p }}
+  {{ newworker_form.management_form }}
+    {% for form in newworker_form %}
+    <div class="hideInputs">
+      {{ form }}
+    </div>
+    {% endfor %}
+  </div>
+
+
+  <input type="submit" value="Submit" />
+</form>
+{% endblock %}

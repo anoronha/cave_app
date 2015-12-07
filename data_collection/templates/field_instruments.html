@@ -1,0 +1,20 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+<form action="/new-fieldtrip/field-instruments" method="post">
+  <h4>Gas Sampling and Measurements:</h4>
+    {% csrf_token %}
+    <h4>CO<sub>2</sub> Spot Check:</h4>
+    {{ spotcheck_formset.management_form }}
+    <!-- <div class="hideInputs"> -->
+      {% for form in spotcheck_formset %}
+      <div>
+        {{ form }}
+      </div>
+      {% endfor %}
+    </div>
+  {{ upload_form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

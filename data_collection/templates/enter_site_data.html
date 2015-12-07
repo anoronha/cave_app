@@ -1,0 +1,73 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+{% load data_collection_tags %}
+<head>
+<!-- <h2>{{ site }} data collected {{ start_trip|date:"M d" }}-{{ end_trip|date:"d, Y" }}</h2> -->
+<h2>{{ site }} - {{ samplename }}</h2>
+</head>
+<form action="/enter-site-data/" method="post">
+    {% csrf_token %}
+    {{ bottle_down.as_p }}
+    {{ bottle_up.as_p }}
+    {{ bottlecollection_form.as_p }}
+    <h4>Drip Interval:</h4>
+    {{ dripinterval_form.as_p }}
+    <h4>Water chemistry:</h4>
+    {{ fieldchem_form }}
+    <h4>Plate Collection:</h4>
+    {{ platecollect_form }}
+    <h4>Plate Deployment:</h4>
+    {{ platedeploy_form }}
+    <h4>Samples Collected:</h4>
+    {{ watersamples.management_form }}
+    <!-- <div class="hideInputs"> -->
+      {% for form in watersamples %}
+      <div class="hideInputs">
+      {% autoescape off %}
+        <h5>{{ analysis_display|get:form.intendedanalysis.value }}</h5>
+      {% endautoescape %}
+        {{ form.as_p }}
+      </div>
+      {% endfor %}
+    </div>
+    <input type="submit" value="Submit" id="submit"/>
+</form>
+<div class="hidden" id="outside-form" />
+<script>
+  $(function() {
+    var $formsetTotal = $('id_form-TOTAL_FORMS');
+    var multiforms_are_stupid_regex = /id_form-\d+/gi;
+    var multiforms_are_stupid_replacement = "id_form-"
+    $( ".hideInputs" ).each(function(){
+      var $parent = $(this);
+      var $toHide = $parent.children(":not(h5)");
+
+      var $title = $parent.find('h5');
+      var $cb = $("<input type='checkbox' />");
+
+      $cb.on('change', function(){
+        if(this.checked) {
+          $parent.addClass('filled');
+          $toHide.detach().appendTo($parent);
+        } else {
+          $parent.removeClass('filled');
+          $toHide.detach().appendTo("#outside-form");
+        }
+      }).trigger('change');
+
+      $cb.prependTo($title);
+    });
+
+    $('#submit').on('click', function(){
+      var $inputs = $( ".hideInputs.filled" )
+      $inputs.each(function(idx){
+        $(this).html($(this).html(multiforms_are_stupid_regex, multiforms_are_stupid_replacement + idx));
+      });
+
+      $formsetTotal.val($inputs.length());
+    });
+  });
+  </script>
+{% endblock %}
