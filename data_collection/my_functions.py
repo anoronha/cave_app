@@ -1,4 +1,4 @@
-# import datetime
+import datetime
 # import time
 # import csv
 # from django import get_or_create
@@ -14,3 +14,7 @@
 #         reader = csv.reader(f)
 #         for row in reader:
 #             objs, created = get_or_create()
+
+def CombineDateTime(date, time):
+    combined = datetime.datetime(date.year, date.month, date.day, time.hour, time.minute)
+    return combined

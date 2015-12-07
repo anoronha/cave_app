@@ -197,6 +197,10 @@ def next_site_data(request):
 def enter_site_data(request):
     if request.method == 'POST':
         bottlecollection_form = DripcollectionbottleForm(request.POST)
+        bottle_down = DateTimeSplitForm(request.POST)
+        print(request.POST.getlist('day'))
+        # tmp = CombineDateTime(bottle_down.)
+        bottle_up = DateTimeSplitForm(request.POST)
         dripinterval_form = DripintervalForm(request.POST)
         platecollect_form = PlatecollectForm(request.POST)
         platedeploy_form = PlatedeplyForm(request.POST)

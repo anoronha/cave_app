@@ -9,7 +9,9 @@
 </head>
 <form action="/enter-site-data/" method="post">
     {% csrf_token %}
+    <h4>Drip Collection Bottle Down:</h4>
     {{ bottle_down.as_p }}
+    <h4>Drip Collection Bottle Up:</h4>
     {{ bottle_up.as_p }}
     {{ bottlecollection_form.as_p }}
     <h4>Drip Interval:</h4>

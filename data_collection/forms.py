@@ -117,14 +117,14 @@ class DripcollectionbottleForm(ModelForm):
         labels = {
             'initialmass': ('Intial Bottle Weight'),
             'finalmass': ('Final Bottle Weight'),
-            'deploytime': ('Deploy Time'),
-            'collecttime': ('Collect Time'),
+            # 'deploytime': ('Deploy Time'),
+            # 'collecttime': ('Collect Time'),
             'note': ('Note'),
             }
         widgets = {
             'samplename': HiddenInput(),
-            'deploytime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm","defaultDate":"2015-01-01"}),
-            'collecttime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
+            # 'deploytime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm","defaultDate":"2015-01-01"}),
+            # 'collecttime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
             }
 
 
