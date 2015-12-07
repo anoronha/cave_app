@@ -65,23 +65,7 @@ def new_fieldtrip_sites(request):
 
 def next_site_data(request):
     idfieldtrip_curr = request.session["idfieldtrip_curr"]
-    start_trip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).beginfieldtrip
-    end_trip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).endfieldtrip
-    if (start_trip.day == end_trip.day) and (start_trip.month == end_trip.month):
-        trip_days = ((datetime.datetime(start_trip.year, start_trip.month, start_trip.day), 'One Day Trip'))
-    else:
-        trip_days = ((datetime.datetime(start_trip.year, start_trip.month, start_trip.day), 'Day 1'),
-                     (datetime.datetime(end_trip.year, end_trip.month, end_trip.day), 'Day 2'))
-
-    initial_bottle_weights = {'Stumpy': '102.3',
-                              'Stumpys Brother': '68.2',
-                              'Station 1': '35.9',
-                              'Station 2': '57.8',
-                              'Flatman': '101.8',
-                              'Trinity': '102.6',
-                            }
     current_idx = request.session.get("current_sample_idx", 0)
-
     print(current_idx)
     if current_idx >= len(request.session["samplenames_curr"]):
         print("Deleting it!")
@@ -94,7 +78,6 @@ def next_site_data(request):
 
     samplename = request.session["samplenames_curr"][key]
     site = key
-
 
     srcat_initial = {'samplename': samplename,
                       'bottlesize': '30 mL',
@@ -153,29 +136,29 @@ def next_site_data(request):
                                                         'watersamples': formset,
                                                         })
     else:
-        if key == 'Trinity':
-            initialmass = initial_bottle_weights[key]
-            bottle_initial = {'samplename': samplename,
-                              'initialmass': initialmass,
-                              'deploytime': end_trip,
-                              'collecttime': end_trip,}
+        start_trip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).beginfieldtrip
+        end_trip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).endfieldtrip
+        if (start_trip.day == end_trip.day) and (start_trip.month == end_trip.month) and (start_trip.year == end_trip.year):
+            trip_length_flag = 1
         else:
-            initialmass = initial_bottle_weights[key]
-            bottle_initial = {'samplename': samplename,
-                              'initialmass': initialmass,
-                              'deploytime': start_trip,
-                              'collecttime': end_trip,}
+            trip_length_flag = 0
+        trip_days = ((datetime.datetime(start_trip.year, start_trip.month, start_trip.day), 'Day 1'),
+                     (datetime.datetime(end_trip.year, end_trip.month, end_trip.day), 'Day 2'))
+        initial_bottle_weights = {'Stumpy': '102.3',
+                                  'Stumpys Brother': '68.2',
+                                  'Station 1': '35.9',
+                                  'Station 2': '57.8',
+                                  'Flatman': '101.8',
+                                  'Trinity': '102.6',
+                                }
+        initialmass = initial_bottle_weights[key]
         platedeploy_prev = Platefielddata.objects.filter(site=site).order_by('-idplatefielddata')[0]
-        bottlecollection_form = DripcollectionbottleForm(initial=bottle_initial)
-        bottle_down = DateTimeSplitForm(choices=trip_days)
-        bottle_up = DateTimeSplitForm(choices=trip_days)
+        bottlecollection_form = DripcollectionbottleEntryForm(samplename=samplename, initialmass=initialmass, day_choices=trip_days, trip_length_flag = trip_length_flag)
         dripinterval_form = DripintervalForm(site=site, idfieldtrip=idfieldtrip_curr, initial={'timecollected':start_trip})
         platecollect_form = PlatecollectForm(instance=platedeploy_prev)
         platedeploy_form = PlatedeplyForm(site=site, idfieldtrip=idfieldtrip_curr)
         fieldchem_form = FieldwaterchemistryForm(samplename=samplename)
         return render(request, 'enter_site_data.html', {'bottlecollection_form': bottlecollection_form,
-                                                        'bottle_down':bottle_down,
-                                                        'bottle_up':bottle_up,
                                                         'dripinterval_form': dripinterval_form,
                                                         'platecollect_form': platecollect_form,
                                                         'platedeploy_form': platedeploy_form,
@@ -196,19 +179,24 @@ def next_site_data(request):
 
 def enter_site_data(request):
     if request.method == 'POST':
-        bottlecollection_form = DripcollectionbottleForm(request.POST)
-        bottle_down = DateTimeSplitForm(request.POST)
-        print(request.POST.getlist('day'))
-        # tmp = CombineDateTime(bottle_down.)
-        bottle_up = DateTimeSplitForm(request.POST)
+        # bottlecollection_form = DripcollectionbottleEntryForm(request.POST)
+        bottle_down_day = datetime.datetime.strptime(request.POST.get('down_day'), '%Y-%m-%d %H:%M:%S')
+        bottle_down_time = datetime.datetime.strptime(request.POST.get('down_time'), '%H:%M')
+        bottle_down = datetime.datetime(bottle_down_day.year, bottle_down_day.month, bottle_down_day.day, bottle_down_time.hour, bottle_down_time.minute)
+        bottle_up_day = datetime.datetime.strptime(request.POST.get('up_day'), '%Y-%m-%d %H:%M:%S')
+        bottle_up_time = datetime.datetime.strptime(request.POST.get('up_time'), '%H:%M')
+        print(request.POST.get('initialmass'))
+        bottle_up = datetime.datetime(bottle_up_day.year, bottle_up_day.month, bottle_up_day.day, bottle_up_time.hour, bottle_up_time.minute)
+        tmp = {'samplename': request.POST.get('samplename'), 'initialmass': request.POST.get('initialmass'), 'finalmass': request.POST.get('finalmass'),'deploytime': bottle_down,'collecttime': bottle_up}
+        tmp_form = DripcollectionbottleSubmitForm(tmp)
         dripinterval_form = DripintervalForm(request.POST)
         platecollect_form = PlatecollectForm(request.POST)
         platedeploy_form = PlatedeplyForm(request.POST)
         fieldchem_form = FieldwaterchemistryForm(request.POST)
         WatersampleinventoryFormset = formset_factory(WatersampleinventoryForm, extra=0)
         watersamples = WatersampleinventoryFormset(request.POST)
-        if bottlecollection_form.is_valid():
-            data = bottlecollection_form.save()
+        if tmp_form.is_valid():
+            data = tmp_form.save()
         if dripinterval_form.is_valid():
             data = dripinterval_form.save()
         if platecollect_form.is_valid():

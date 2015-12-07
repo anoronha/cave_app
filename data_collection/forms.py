@@ -71,10 +71,6 @@ class SelectWaterSampleSiteForm(Form):
         filtered_sites = kwargs.pop('filtered_sites', Site.objects.none())
         super(SelectWaterSampleSiteForm, self).__init__(*args, **kwargs)
         self.fields['selected_sites'].queryset = filtered_sites
-    # def clean(self):
-    #     super(SelectWaterSampleSiteForm, self).clean()
-    #     if self.cleaned_data.get('selected_sites') in self._errors:
-    #         del self._errors['selected_sites']
 
 
 class SamplenamemasterlistForm(ModelForm):
@@ -92,42 +88,53 @@ class GroundwatersampledetailsForm(ModelForm):
         model = Groundwatersampledetails
         fields = ['samplename','site','idfieldtrip']
 
-class DateTimeSplitForm(Form):
-    day = forms.ChoiceField(choices=())
+# class DateTimeSplitForm(Form):
+#     day = forms.ChoiceField(choices=())
+#     def __init__(self, *args, **kwargs):
+#         choices = kwargs.pop('choices', None)
+#         super(DateTimeSplitForm, self).__init__(*args, **kwargs)
+#         if choices is not None and len(choices)>1:
+#             self.fields['day'].choices = choices
+#         else:
+#             self.fields['day'].widget = HiddenInput()
+#     time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}))
+
+
+class DripcollectionbottleEntryForm(Form):
+    down_day = forms.ChoiceField(choices=())
+    down_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}),label = 'Time')
+    initialmass = forms.DecimalField(label='Initial Mass')
+    up_day = forms.ChoiceField(choices=())
+    up_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}), label = 'Time')
+    finalmass = forms.DecimalField(label='Final Mass')
+    samplename = forms.CharField(widget=HiddenInput())
     def __init__(self, *args, **kwargs):
-        choices = kwargs.pop('choices', None)
-        super(DateTimeSplitForm, self).__init__(*args, **kwargs)
-        if choices is not None and len(choices)>1:
-            self.fields['day'].choices = choices
-        else:
-            self.fields['day'].widget = HiddenInput()
-    time = forms.DateTimeField(
-        required=False,
-        widget=DateTimePicker(options={"format": "HH:mm"}))
+        day_choices = kwargs.pop('day_choices', None)
+        flag = kwargs.pop('trip_length_flag', None)
+        initialmass = kwargs.pop('initialmass', None)
+        samplename = kwargs.pop('samplename', None)
+        super(DripcollectionbottleEntryForm, self).__init__(*args, **kwargs)
+        if day_choices is not None and flag == 0:
+            self.fields['down_day'].choices = day_choices
+            self.fields['up_day'].choices = day_choices
+        elif day_choices is not None:
+            self.fields['down_day'].choices = day_choices
+            self.fields['down_day'].initial = day_choices[0]
+            self.fields['up_day'].choices = day_choices
+            self.fields['up_day'].initial = day_choices[0]
+            self.fields['down_day'].widget = HiddenInput()
+            self.fields['up_day'].widget = HiddenInput()
+        if initialmass is not None:
+            self.fields['initialmass'].initial = initialmass
+        if samplename is not None:
+            self.fields['samplename'].queryset = Samplenamemasterlist.objects.filter(samplename=samplename)
+    note = forms.CharField(label='Note')
 
-
-class DripcollectionbottleForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(DripcollectionbottleForm, self).__init__(*args, **kwargs)
-
+class DripcollectionbottleSubmitForm(ModelForm):
     class Meta:
         model = Dripcollectionbottle
         fields = ['samplename','initialmass', 'finalmass', 'deploytime',
                   'collecttime','note']
-        labels = {
-            'initialmass': ('Intial Bottle Weight'),
-            'finalmass': ('Final Bottle Weight'),
-            # 'deploytime': ('Deploy Time'),
-            # 'collecttime': ('Collect Time'),
-            'note': ('Note'),
-            }
-        widgets = {
-            'samplename': HiddenInput(),
-            # 'deploytime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm","defaultDate":"2015-01-01"}),
-            # 'collecttime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
-            }
-
-
 
 
 class DripintervalForm(ModelForm):
