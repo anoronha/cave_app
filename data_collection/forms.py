@@ -102,14 +102,14 @@ class GroundwatersampledetailsForm(ModelForm):
 
 class CavedripwaterForm(Form):
     bottle_down_day = forms.ChoiceField(choices=())
-    bottle_down_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}),label = 'Time')
+    bottle_down_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}, icon_attrs={'class': 'glyphicon glyphicon-time'}),label = 'Time')
     initialmass = forms.DecimalField(label='Initial Mass')
     bottle_up_day = forms.ChoiceField(choices=())
-    bottle_up_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}), label = 'Time')
+    bottle_up_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}, icon_attrs={'class': 'glyphicon glyphicon-time'}), label = 'Time')
     finalmass = forms.DecimalField(label='Final Mass')
     samplename = forms.CharField(widget=HiddenInput())
     dripcount_day = forms.ChoiceField(choices=())
-    dripcount_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}),label = 'Time')
+    dripcount_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}, icon_attrs={'class': 'glyphicon glyphicon-time'}),label = 'Time')
     dripcount_1 = forms.IntegerField(label='Drip Count 1')
     dripcount_2 = forms.IntegerField(label='Drip Count 2')
     dripcount_3 = forms.IntegerField(label='Drip Count 3')

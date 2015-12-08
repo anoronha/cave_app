@@ -213,7 +213,9 @@ def enter_site_data(request):
         else:
             return HttpResponseRedirect('/samples-collected/')
     else:
-        del request.session["current_sample_idx"]
+        if request.session.get("current_sample_idx", None):
+            del request.session["current_sample_idx"]
+
         next_site = next_site_data(request)
         if next_site:
             return next_site
