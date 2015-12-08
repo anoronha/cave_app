@@ -10,11 +10,11 @@
 <form action="/enter-site-data/" method="post">
     {% csrf_token %}
     <h4>Drip Collection Bottle:</h4>
-    {{ bottlecollection_form.as_p }}
-    <h4>Drip Interval:</h4>
-    {{ dripinterval_form.as_p }}
-    <h4>Water chemistry:</h4>
-    {{ fieldchem_form }}
+    {{ tmp_form.as_p }}
+    <!-- <h4>Drip Interval:</h4>
+    {{ dripinterval_form.as_p }} -->
+    <!-- <h4>Water chemistry:</h4>
+    {{ fieldchem_form }} -->
     <h4>Plate Collection:</h4>
     {{ platecollect_form }}
     <h4>Plate Deployment:</h4>

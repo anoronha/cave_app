@@ -100,30 +100,41 @@ class GroundwatersampledetailsForm(ModelForm):
 #     time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}))
 
 
-class DripcollectionbottleEntryForm(Form):
-    down_day = forms.ChoiceField(choices=())
-    down_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}),label = 'Time')
+class CavedripwaterForm(Form):
+    bottle_down_day = forms.ChoiceField(choices=())
+    bottle_down_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}),label = 'Time')
     initialmass = forms.DecimalField(label='Initial Mass')
-    up_day = forms.ChoiceField(choices=())
-    up_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}), label = 'Time')
+    bottle_up_day = forms.ChoiceField(choices=())
+    bottle_up_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}), label = 'Time')
     finalmass = forms.DecimalField(label='Final Mass')
     samplename = forms.CharField(widget=HiddenInput())
+    dripcount_day = forms.ChoiceField(choices=())
+    dripcount_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}),label = 'Time')
+    dripcount_1 = forms.IntegerField(label='Drip Count 1')
+    dripcount_2 = forms.IntegerField(label='Drip Count 2')
+    dripcount_3 = forms.IntegerField(label='Drip Count 3')
+    fieldinstrumentname = forms.ModelChoiceField(queryset=())
+    orp = forms.DecimalField(label='ORP')
+    tds = forms.DecimalField(label='TDS')
+    conductivity = forms.DecimalField(label='TDS')
+    ph = forms.DecimalField(label='pH')
+    temp = forms.DecimalField(label='Temperature')
     def __init__(self, *args, **kwargs):
         day_choices = kwargs.pop('day_choices', None)
         flag = kwargs.pop('trip_length_flag', None)
         initialmass = kwargs.pop('initialmass', None)
         samplename = kwargs.pop('samplename', None)
-        super(DripcollectionbottleEntryForm, self).__init__(*args, **kwargs)
+        super(CavedripwaterForm, self).__init__(*args, **kwargs)
+        self.fields['fieldinstrumentname'].queryset = Fieldinstrumentname.objects.filter(fieldinstrumenttype='Ultrameter')
         if day_choices is not None and flag == 0:
-            self.fields['down_day'].choices = day_choices
-            self.fields['up_day'].choices = day_choices
+            self.fields['bottle_down_day'].choices = day_choices
+            self.fields['bottle_up_day'].choices = day_choices
+            self.fields['dripcount_day'].choices = day_choices
         elif day_choices is not None:
-            self.fields['down_day'].choices = day_choices
-            self.fields['down_day'].initial = day_choices[0]
-            self.fields['up_day'].choices = day_choices
-            self.fields['up_day'].initial = day_choices[0]
-            self.fields['down_day'].widget = HiddenInput()
-            self.fields['up_day'].widget = HiddenInput()
+            self.fields['bottle_down_day'].choices = day_choices
+            self.fields['bottle_up_day'].choices = day_choices
+            self.fields['bottle_down_day'].widget = HiddenInput()
+            self.fields['bottle_up_day'].widget = HiddenInput()
         if initialmass is not None:
             self.fields['initialmass'].initial = initialmass
         if samplename is not None:
