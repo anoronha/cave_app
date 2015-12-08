@@ -88,18 +88,6 @@ class GroundwatersampledetailsForm(ModelForm):
         model = Groundwatersampledetails
         fields = ['samplename','site','idfieldtrip']
 
-# class DateTimeSplitForm(Form):
-#     day = forms.ChoiceField(choices=())
-#     def __init__(self, *args, **kwargs):
-#         choices = kwargs.pop('choices', None)
-#         super(DateTimeSplitForm, self).__init__(*args, **kwargs)
-#         if choices is not None and len(choices)>1:
-#             self.fields['day'].choices = choices
-#         else:
-#             self.fields['day'].widget = HiddenInput()
-#     time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}))
-
-
 class CavedripwaterForm(Form):
     bottle_down_day = forms.ChoiceField(choices=())
     bottle_down_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}, icon_attrs={'class': 'glyphicon glyphicon-time'}),label = 'Time')
@@ -107,7 +95,7 @@ class CavedripwaterForm(Form):
     bottle_up_day = forms.ChoiceField(choices=())
     bottle_up_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}, icon_attrs={'class': 'glyphicon glyphicon-time'}), label = 'Time')
     finalmass = forms.DecimalField(label='Final Mass')
-    samplename = forms.CharField(widget=HiddenInput())
+    watersamplename = forms.CharField(widget=HiddenInput())
     dripcount_day = forms.ChoiceField(choices=())
     dripcount_time = forms.DateTimeField(required=False, widget=DateTimePicker(options={"format": "HH:mm"}, icon_attrs={'class': 'glyphicon glyphicon-time'}),label = 'Time')
     dripcount_1 = forms.IntegerField(label='Drip Count 1')
@@ -123,7 +111,7 @@ class CavedripwaterForm(Form):
         day_choices = kwargs.pop('day_choices', None)
         flag = kwargs.pop('trip_length_flag', None)
         initialmass = kwargs.pop('initialmass', None)
-        samplename = kwargs.pop('samplename', None)
+        watersamplename = kwargs.pop('watersamplename', None)
         super(CavedripwaterForm, self).__init__(*args, **kwargs)
         self.fields['fieldinstrumentname'].queryset = Fieldinstrumentname.objects.filter(fieldinstrumenttype='Ultrameter')
         if day_choices is not None and flag == 0:
@@ -137,8 +125,9 @@ class CavedripwaterForm(Form):
             self.fields['bottle_up_day'].widget = HiddenInput()
         if initialmass is not None:
             self.fields['initialmass'].initial = initialmass
-        if samplename is not None:
-            self.fields['samplename'].queryset = Samplenamemasterlist.objects.filter(samplename=samplename)
+        if watersamplename is not None:
+            # self.fields['watersamplename'].queryset = Samplenamemasterlist.objects.filter(samplename=watersamplename)
+            self.fields['watersamplename'].initial = watersamplename
     note = forms.CharField(label='Note')
 
 class DripcollectionbottleSubmitForm(ModelForm):

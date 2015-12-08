@@ -31,17 +31,12 @@ def new_fieldtrip_sites(request):
         samplenames_curr = {}
         for key in request.POST.getlist('selected_sites'):
             sitecode = Site.objects.get(idsite=key).sitecode
-            site = Site.objects.get(idsite=key).site
             samplename = '%s %s' %(trip_date, sitecode)
-            masterlist_input = {'samplename': samplename, 'sampletype': 'groundwater'}
-            sampledetail_input = {'samplename': samplename, 'site': site, 'idfieldtrip': request.session["idfieldtrip_curr"]}
-            masterlist_form = SamplenamemasterlistForm(masterlist_input)
-            sampledetail_form = GroundwatersampledetailsForm(sampledetail_input)
-            samplenames_curr[site] = samplename
-            if masterlist_form.is_valid():
-                data = masterlist_form.save()
-            if sampledetail_form.is_valid():
-                data = sampledetail_form.save()
+            masterlist_input = Samplenamemasterlist(samplename=samplename,
+                                                    sampletype=Sampletype.objects.get(sampletype='groundwater')).save()
+            sampledetail_input = Groundwatersampledetails(samplename=Samplenamemasterlist.objects.get(samplename=samplename),
+                                                          site=Site.objects.get(idsite=key),
+                                                          idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
         for key in request.POST.getlist('workers'):
             workername = Worker.objects.get(idworker=key).workername
             worker_input = {'workername': workername, 'idfieldtrip': request.session["idfieldtrip_curr"]}
@@ -118,10 +113,8 @@ def next_site_data(request):
         "DIC d13C" : u'&delta;<sup>13</sup>C',
         "alkalinity" : u'Alkalinity',
     }
-    fieldchem_form = FieldwaterchemistryForm(samplename=samplename)
-
     WatersampleinventoryFormset = formset_factory(WatersampleinventoryForm, extra=0)
-    formset = WatersampleinventoryFormset(initial = [
+    collectedsamples_formset = WatersampleinventoryFormset(initial = [
         srcat_initial,
         anions_initial,
         d18O_initial,
@@ -131,9 +124,8 @@ def next_site_data(request):
     ])
 
     if key  == 'Pool':
-        return render(request, 'enter_site_data.html', {'fieldchem_form': fieldchem_form,
-                                                        'samplename': samplename,
-                                                        'watersamples': formset,
+        return render(request, 'enter_site_data.html', {'watersamplename': samplename,
+                                                        'collectedsamples_formset': collectedsamples_formset,
                                                         })
     else:
         start_trip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).beginfieldtrip
@@ -154,47 +146,39 @@ def next_site_data(request):
                                 }
         initialmass = initial_bottle_weights[key]
         platedeploy_prev = Platefielddata.objects.filter(site=site).order_by('-idplatefielddata')[0]
-        tmp_form = CavedripwaterForm(samplename=samplename, initialmass=initialmass, day_choices=trip_days, trip_length_flag = trip_length_flag)
-        # dripinterval_form = DripintervalForm(site=site, idfieldtrip=idfieldtrip_curr, initial={'timecollected':start_trip})
+        tmp_form = CavedripwaterForm(watersamplename=samplename, initialmass=initialmass, day_choices=trip_days, trip_length_flag = trip_length_flag)
         platecollect_form = PlatecollectForm(instance=platedeploy_prev)
         platedeploy_form = PlatedeplyForm(site=site, idfieldtrip=idfieldtrip_curr)
-        # fieldchem_form = FieldwaterchemistryForm(samplename=samplename)
         return render(request, 'enter_site_data.html', {'tmp_form': tmp_form,
-                                                        # 'dripinterval_form': dripinterval_form,
                                                         'platecollect_form': platecollect_form,
                                                         'platedeploy_form': platedeploy_form,
-                                                        # 'fieldchem_form': fieldchem_form,
                                                         'site': site,
-                                                        'samplename': samplename,
+                                                        'watersamplename': samplename,
                                                         'start_trip': start_trip,
                                                         'end_trip': end_trip,
-                                                        'watersamples': formset,
+                                                        'collectedsamples_formset': collectedsamples_formset,
                                                         'analysis_display': analysis_display,
-                                                        # 'srcat_sample_form': srcat_sample_form,
-                                                        # 'anions_sample_form': anions_sample_form,
-                                                        # 'd18O_sample_form': d18O_sample_form,
-                                                        # 'dD_sample_form': dD_sample_form,
-                                                        # 'alk_sample_form': alk_sample_form,
-                                                        # 'd13C_sample_form': d13C_sample_form,
                                                         })
 
 def enter_site_data(request):
     if request.method == 'POST':
-        # bottlecollection_form = DripcollectionbottleEntryForm(request.POST)
         bottle_down_day = datetime.datetime.strptime(request.POST.get('bottle_down_day'), '%Y-%m-%d %H:%M:%S')
         bottle_down_time = datetime.datetime.strptime(request.POST.get('bottle_down_time'), '%H:%M')
         bottle_down = datetime.datetime(bottle_down_day.year, bottle_down_day.month, bottle_down_day.day, bottle_down_time.hour, bottle_down_time.minute)
         bottle_up_day = datetime.datetime.strptime(request.POST.get('bottle_up_day'), '%Y-%m-%d %H:%M:%S')
         bottle_up_time = datetime.datetime.strptime(request.POST.get('bottle_up_time'), '%H:%M')
         bottle_up = datetime.datetime(bottle_up_day.year, bottle_up_day.month, bottle_up_day.day, bottle_up_time.hour, bottle_up_time.minute)
-        tmp = {'samplename': request.POST.get('samplename'), 'initialmass': request.POST.get('initialmass'), 'finalmass': request.POST.get('finalmass'),'deploytime': bottle_down,'collecttime': bottle_up}
-        tmp_form = DripcollectionbottleSubmitForm(tmp)
+        dripcollection = Dripcollectionbottle(samplename=Samplenamemasterlist.objects.get(samplename=request.POST.get('watersamplename')),
+                                              initialmass=request.POST.get('initialmass'),
+                                              finalmass=request.POST.get('finalmass'),
+                                              deploytime=bottle_down,
+                                              collecttime=bottle_up).save()
         dripinterval_form = DripintervalForm(request.POST)
         platecollect_form = PlatecollectForm(request.POST)
         platedeploy_form = PlatedeplyForm(request.POST)
         fieldchem_form = FieldwaterchemistryForm(request.POST)
         WatersampleinventoryFormset = formset_factory(WatersampleinventoryForm, extra=0)
-        watersamples = WatersampleinventoryFormset(request.POST)
+        collectedsamples_formset = WatersampleinventoryFormset(request.POST)
         if tmp_form.is_valid():
             data = tmp_form.save()
         if dripinterval_form.is_valid():
@@ -205,8 +189,9 @@ def enter_site_data(request):
             data = platedeploy_form.save()
         if fieldchem_form.is_valid():
             data = fieldchem_form.save()
-        if watersamples.is_valid():
-            data = watersamples.save()
+        if collectedsamples_formset.is_valid():
+            for form in collectedsamples_formset:
+                form.save()
         next_site = next_site_data(request)
         if next_site:
             return next_site

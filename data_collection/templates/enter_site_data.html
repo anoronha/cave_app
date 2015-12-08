@@ -5,24 +5,19 @@
 {% load data_collection_tags %}
 <head>
 <!-- <h2>{{ site }} data collected {{ start_trip|date:"M d" }}-{{ end_trip|date:"d, Y" }}</h2> -->
-<h2>{{ site }} - {{ samplename }}</h2>
+<h2>{{ site }} - {{ watersamplename }}</h2>
 </head>
 <form action="/enter-site-data/" method="post">
     {% csrf_token %}
     <h4>Drip Collection Bottle:</h4>
     {{ tmp_form.as_p }}
-    <!-- <h4>Drip Interval:</h4>
-    {{ dripinterval_form.as_p }} -->
-    <!-- <h4>Water chemistry:</h4>
-    {{ fieldchem_form }} -->
     <h4>Plate Collection:</h4>
     {{ platecollect_form }}
     <h4>Plate Deployment:</h4>
     {{ platedeploy_form }}
     <h4>Samples Collected:</h4>
-    {{ watersamples.management_form }}
-    <!-- <div class="hideInputs"> -->
-      {% for form in watersamples %}
+    {{ collectedsamples_formset.management_form }}
+      {% for form in collectedsamples_formset %}
       <div class="hideInputs">
       {% autoescape off %}
         <h5>{{ analysis_display|get:form.intendedanalysis.value }}</h5>
