@@ -38,15 +38,10 @@ def new_fieldtrip_sites(request):
                                                           site=Site.objects.get(idsite=key),
                                                           idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
         for key in request.POST.getlist('workers'):
-            workername = Worker.objects.get(idworker=key).workername
-            worker_input = {'workername': workername, 'idfieldtrip': request.session["idfieldtrip_curr"]}
-            print(worker_input)
-            fieldteam_form = FieldteamForm(worker_input)
-            if fieldteam_form.is_valid():
-                data = fieldteam_form.save()
-
+            worker_input = Fieldteam(workername=Worker.objects.get(idworker=key),
+                                     idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
         request.session["samplenames_curr"] = samplenames_curr
-        location = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).location
+        # location = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).location
         return HttpResponseRedirect('/enter-site-data/')
     else:
         fieldtrip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])
@@ -66,14 +61,11 @@ def next_site_data(request):
         print("Deleting it!")
         del request.session["current_sample_idx"]
         return None
-
     key = sorted(request.session["samplenames_curr"])[current_idx]
-
+    print(key)
     request.session["current_sample_idx"] = current_idx + 1
-
     samplename = request.session["samplenames_curr"][key]
     site = key
-
     srcat_initial = {'samplename': samplename,
                       'bottlesize': '30 mL',
                       'bottletype': 'HDPE vial',
@@ -146,9 +138,13 @@ def next_site_data(request):
                                 }
         initialmass = initial_bottle_weights[key]
         platedeploy_prev = Platefielddata.objects.filter(site=site).order_by('-idplatefielddata')[0]
-        tmp_form = CavedripwaterForm(watersamplename=samplename, initialmass=initialmass, day_choices=trip_days, trip_length_flag = trip_length_flag)
+        tmp_form = CavedripwaterForm(watersamplename=samplename,
+                                     initialmass=initialmass,
+                                     day_choices=trip_days,
+                                     trip_length_flag = trip_length_flag)
         platecollect_form = PlatecollectForm(instance=platedeploy_prev)
-        platedeploy_form = PlatedeplyForm(site=site, idfieldtrip=idfieldtrip_curr)
+        platedeploy_form = PlatedeplyForm(site=site,
+                                          idfieldtrip=idfieldtrip_curr)
         return render(request, 'enter_site_data.html', {'tmp_form': tmp_form,
                                                         'platecollect_form': platecollect_form,
                                                         'platedeploy_form': platedeploy_form,
@@ -173,7 +169,11 @@ def enter_site_data(request):
                                               finalmass=request.POST.get('finalmass'),
                                               deploytime=bottle_down,
                                               collecttime=bottle_up).save()
-        dripinterval_form = DripintervalForm(request.POST)
+        dripcount_day = datetime.datetime.strptime(request.POST.get('dripcount_day'), '%Y-%m-%d %H:%M:%S')
+        dripcount_time = datetime.datetime.strptime(request.POST.get('dripcount_time'), '%H:%M')
+        dripcount_datetime = datetime.datetime(dripcount_day.year, dripcount_day.month, dripcount_day.day, dripcount_time.hour, dripcount_time.minute)
+        # dripinterval = Dripinterval(idfieldtrip=Fieldtrip.objects.get(idfieldtrip=request.session["idfieldtrip_curr"]),
+        #                             site=Site.objects.get(site=))
         platecollect_form = PlatecollectForm(request.POST)
         platedeploy_form = PlatedeplyForm(request.POST)
         fieldchem_form = FieldwaterchemistryForm(request.POST)

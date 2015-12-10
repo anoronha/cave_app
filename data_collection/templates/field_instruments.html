@@ -7,7 +7,6 @@
     {% csrf_token %}
     <h4>CO<sub>2</sub> Spot Check:</h4>
     {{ spotcheck_formset.management_form }}
-    <!-- <div class="hideInputs"> -->
       {% for form in spotcheck_formset %}
       <div>
         {{ form }}

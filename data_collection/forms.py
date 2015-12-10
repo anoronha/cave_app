@@ -5,11 +5,15 @@ from django.forms import ModelForm, Form, HiddenInput, TextInput, Select, BaseFo
 import datetime
 from bootstrap3_datetime.widgets import DateTimePicker
 from django.utils.safestring import mark_safe
+# from uni_form.helper import FormHelper
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 class NewFieldtripForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super (NewFieldtripForm, self).__init__(*args, **kwargs)
         self.fields['location'].queryset = Location.objects.filter(active=1).filter(locationtype='field trip')
+        self.helper = FormHelper()
 
     def clean(self):
         cleaned_data = super(NewFieldtripForm, self).clean()

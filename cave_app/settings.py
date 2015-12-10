@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'bootstrap3_datetime',
+    'crispy_forms',
         )
 
 MIDDLEWARE_CLASSES = (
@@ -101,6 +102,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+# CRISPY_TEMPLATE_PACK = 'uni_form'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
