@@ -1,4 +1,6 @@
-{% load staticfiles %}
+
+
+
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
@@ -23,7 +25,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
     <title>Guam Groundwater Research Project</title>
-    <link href="{%static 'css/navbar-fixed-top.css' %}" rel="stylesheet">
+    <link href="/static/css/navbar-fixed-top.css" rel="stylesheet">
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -40,7 +42,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="{% url 'new-fieldtrip' %}">Enter Data</a></li>
+            <li><a href="/new-fieldtrip/">Enter Data</a></li>
             <li><a href="#contact">Contact</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Enter Data <span class="caret"></span></a>
@@ -59,8 +61,57 @@
       </div>
     </nav>
 
-    {%block content %}{% endblock %}
-    {%block footer %}{% endblock %}
+
+<!--  -->
+    <div class="container">
+      <div class="row">
+        <tr><th><label for="id_location">Location:</label></th><td><select id="id_location" name="location">
+<option value="" selected="selected">---------</option>
+<option value="0">Jinapsan Cave</option>
+<option value="2">GWA Well</option>
+<option value="3">Coastal Spring</option>
+</select></td></tr>
+<tr><th><label for="id_beginfieldtrip">Trip Start:</label></th><td>
+        <div class="input-group date" id="id_beginfieldtrip_picker">
+            <input class="form-control" id="id_beginfieldtrip" name="beginfieldtrip" type="text"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <script>
+            $(function() {
+                $("#id_beginfieldtrip_picker").datetimepicker({"format": "YYYY-MM-DD HH:mm", "locale": "en-us"});
+            });
+        </script></td></tr>
+<tr><th><label for="id_endfieldtrip">Trip End:</label></th><td>
+        <div class="input-group date" id="id_endfieldtrip_picker">
+            <input class="form-control" id="id_endfieldtrip" name="endfieldtrip" type="text"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <script>
+            $(function() {
+                $("#id_endfieldtrip_picker").datetimepicker({"format": "YYYY-MM-DD HH:mm", "locale": "en-us"});
+            });
+        </script></td></tr>
+<tr><th><label for="id_workers_0">Field Team:</label></th><td><ul id="id_workers"><li><label for="id_workers_0"><input id="id_workers_0" name="workers" type="checkbox" value="2" /> Alexandra Noronha</label></li>
+<li><label for="id_workers_1"><input id="id_workers_1" name="workers" type="checkbox" value="3" /> John Jenson</label></li>
+<li><label for="id_workers_2"><input id="id_workers_2" name="workers" type="checkbox" value="4" /> Mark Lander</label></li>
+<li><label for="id_workers_3"><input id="id_workers_3" name="workers" type="checkbox" value="5" /> Kaylyn Bautista</label></li>
+<li><label for="id_workers_4"><input id="id_workers_4" name="workers" type="checkbox" value="6" /> Ida Shalilian</label></li>
+<li><label for="id_workers_5"><input id="id_workers_5" name="workers" type="checkbox" value="7" /> Daniel Superales</label></li>
+<li><label for="id_workers_6"><input id="id_workers_6" name="workers" type="checkbox" value="8" /> Bekah Dougher</label></li>
+<li><label for="id_workers_7"><input id="id_workers_7" name="workers" type="checkbox" value="9" /> Brytney Miller</label></li>
+<li><label for="id_workers_8"><input id="id_workers_8" name="workers" type="checkbox" value="24" /> John Joseph Bautista</label></li></ul></td></tr>
+<tr><th><label for="id_ultrameter">Ultrameter:</label></th><td><select id="id_ultrameter" name="ultrameter">
+<option value="" selected="selected">---------</option>
+</select></td></tr>
+<tr><th><label for="id_note">Note:</label></th><td><input id="id_note" name="note" type="text" /></td></tr>
+      </div>
+    </div>
+
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

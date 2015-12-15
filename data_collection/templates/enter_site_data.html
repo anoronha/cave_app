@@ -4,7 +4,6 @@
 {% block content %}
 {% load data_collection_tags %}
 <head>
-<!-- <h2>{{ site }} data collected {{ start_trip|date:"M d" }}-{{ end_trip|date:"d, Y" }}</h2> -->
 <h2>{{ site }} - {{ watersamplename }}</h2>
 </head>
 <form action="/enter-site-data/" method="post">
@@ -19,9 +18,9 @@
     {{ collectedsamples_formset.management_form }}
       {% for form in collectedsamples_formset %}
       <div class="hideInputs">
-      {% autoescape off %}
+      <!-- {% autoescape off %}
         <h5>{{ analysis_display|get:form.intendedanalysis.value }}</h5>
-      {% endautoescape %}
+      {% endautoescape %} -->
         {{ form.as_p }}
       </div>
       {% endfor %}

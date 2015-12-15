@@ -5,16 +5,43 @@ from django.forms import ModelForm, Form, HiddenInput, TextInput, Select, BaseFo
 import datetime
 from bootstrap3_datetime.widgets import DateTimePicker
 from django.utils.safestring import mark_safe
-# from uni_form.helper import FormHelper
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div
 
-class NewFieldtripForm(ModelForm):
+class NewFieldtripForm(Form):
+    location = forms.ModelChoiceField(queryset=Location.objects.none(),label='Location')
+    beginfieldtrip = forms.ChoiceField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
+                                       label='Trip Start')
+    endfieldtrip = forms.ChoiceField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
+                                     label='Trip End')
+    workers = forms.ModelMultipleChoiceField(queryset=Worker.objects.none(),
+                                             widget=forms.CheckboxSelectMultiple,
+                                             label='Field Team',
+                                             required=False)
+    note = forms.CharField(label='Note',
+                           required=False)
     def __init__(self, *args, **kwargs):
-        super (NewFieldtripForm, self).__init__(*args, **kwargs)
+        workers = kwargs.pop('workers', Worker.objects.none())
+        # ultrameter = kwargs.pop('ultrameter', Fieldinstrumentname.objects.none())
+        super(NewFieldtripForm, self).__init__(*args, **kwargs)
         self.fields['location'].queryset = Location.objects.filter(active=1).filter(locationtype='field trip')
-        self.helper = FormHelper()
-
+        self.fields['workers'].queryset = workers
+        # self.fields['ultrameter'].queryset = ultrameter
+        # self.helper = FormHelper()
+        # self.helper.add_input(Submit('submit', 'Submit'))
+        # self.helper.layout = Layout(
+        #     Div(
+        #         Div('location', css_class='col-md-3'),
+        #         Div('beginfieldtrip', css_class='col-md-3'),
+        #         Div('endfieldtrip', css_class='col-md-3'),
+        #     css_class='row'),
+        #     Div(
+        #         Div('workers', css_class='col-md-3'),
+        #     css_class='row'),
+        #     Div(
+        #         Div('note', css_class='col-md-6'),
+        #     css_class='row'),
+        #     )
     def clean(self):
         cleaned_data = super(NewFieldtripForm, self).clean()
         beginfieldtrip = cleaned_data.get('beginfieldtrip')
@@ -22,51 +49,38 @@ class NewFieldtripForm(ModelForm):
         if beginfieldtrip and endfieldtrip:
             if endfieldtrip < beginfieldtrip:
                 raise forms.ValidationError(
-                "Trip end cannot be before trip start"
+                "You can't start a trip before you end it!"
                 )
+#
+class FieldtripForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super (FieldtripForm, self).__init__(*args, **kwargs)
     class Meta:
         model = Fieldtrip
-        fields = ['location', 'beginfieldtrip', 'endfieldtrip', 'note']
-        labels = {
-            'location': ('Location'),
-            'beginfieldtrip': ('Trip Start'),
-            'endfieldtrip': ('Trip End'),
-            'note': ('Note'),
-            }
-        widgets = {
-            'beginfieldtrip': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
-            'endfieldtrip': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
-        }
+        fields = ['location','beginfieldtrip','endfieldtrip']
+    def clean(self):
+        cleaned_data = super(FieldtripForm, self).clean()
+        beginfieldtrip = cleaned_data.get('beginfieldtrip')
+        endfieldtrip = cleaned_data.get('endfieldtrip')
+        if beginfieldtrip and endfieldtrip:
+            if endfieldtrip < beginfieldtrip:
+                raise forms.ValidationError(
+                "You can't start a trip before you end it!"
+                )
 
-class SelectteamForm(Form):
-    workers = forms.ModelMultipleChoiceField(queryset=Worker.objects.none(),widget=forms.CheckboxSelectMultiple)
-    def __init__(self, *args, **kwargs):
-        workers = kwargs.pop('workers', Worker.objects.none())
-        super (SelectteamForm, self).__init__(*args, **kwargs)
-        self.fields['workers'].queryset = workers
-
-
-class FieldteamForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super (FieldteamForm, self).__init__(*args, **kwargs)
-    class Meta:
-        model = Fieldteam
-        fields = ['workername','idfieldtrip']
-
-
-class WorkerForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super (WorkerForm, self).__init__(*args, **kwargs)
-    class Meta:
-        model = Worker
-        fields = ['workername', 'workertype','active']
-        labels = {
-            'workername': ('Other'),
-            'workertype': ('Worker Type')
-            }
-        widgets = {
-            'active': HiddenInput(),
-            }
+# class WorkerForm(ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super (WorkerForm, self).__init__(*args, **kwargs)
+#     class Meta:
+#         model = Worker
+#         fields = ['workername', 'workertype','active']
+#         labels = {
+#             'workername': ('Other'),
+#             'workertype': ('Worker Type')
+#             }
+#         widgets = {
+#             'active': HiddenInput(),
+#             }
 
 
 class SelectWaterSampleSiteForm(Form):

@@ -15,48 +15,67 @@ def new_fieldtrip(request):
     if request.method == 'POST':
         form = NewFieldtripForm(request.POST)
         if form.is_valid():
-            data = form.save()
+            print('doot')
+        else:
+            print('fucked up')
+        trip_input = {'location':Location.objects.get(pk=request.POST.get('location')),
+                      'beginfieldtrip':request.POST.get('beginfieldtrip'),
+                      'endfieldtrip':request.POST.get('endfieldtrip')}
+        tmp = FieldtripForm(trip_input)
+        if tmp.is_valid():
+            data = tmp.save()
             request.session["idfieldtrip_curr"] = data.pk
-            return HttpResponseRedirect('/new-fieldtrip/select-sites/')
+        for key in request.POST.getlist('workers'):
+            worker_input = Fieldteam(workername=Worker.objects.get(idworker=key),
+                                     idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
+        return HttpResponseRedirect('/new-fieldtrip/select-sites/')
     else:
-        form = NewFieldtripForm()
-    return render(request, 'new_fieldtrip.html', {'form': form})
+        workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
+        # ultrameter = Fieldinstrumentname.objects.filter(fieldinstrumenttype='Ultrameter')
+        # spot_co2 = Fieldinstrumentname.objects.filter(fieldinstrumenttype='CO2 Logger')
+        trip_form = NewFieldtripForm(workers=workers)
+    return render(request, 'new_fieldtrip.html', {'trip_form': trip_form,})
 
 def new_fieldtrip_sites(request):
     if request.method == 'POST':
         sites_form = SelectWaterSampleSiteForm(request.POST)
-        worker_form = SelectteamForm(request.POST)
+        # worker_form = SelectteamForm(request.POST)
         trip_date = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).endfieldtrip
         trip_date = trip_date.strftime('%Y%m%d')
         samplenames_curr = {}
         for key in request.POST.getlist('selected_sites'):
-            sitecode = Site.objects.get(idsite=key).sitecode
+            current_site = Site.objects.get(idsite=key)
+
+            sitecode = current_site.sitecode
             samplename = '%s %s' %(trip_date, sitecode)
             masterlist_input = Samplenamemasterlist(samplename=samplename,
                                                     sampletype=Sampletype.objects.get(sampletype='groundwater')).save()
             sampledetail_input = Groundwatersampledetails(samplename=Samplenamemasterlist.objects.get(samplename=samplename),
                                                           site=Site.objects.get(idsite=key),
                                                           idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
+
+            samplenames_curr[current_site.site] = samplename
+
         for key in request.POST.getlist('workers'):
             worker_input = Fieldteam(workername=Worker.objects.get(idworker=key),
                                      idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
         request.session["samplenames_curr"] = samplenames_curr
-        # location = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).location
         return HttpResponseRedirect('/enter-site-data/')
     else:
         fieldtrip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])
         filtered_sites = Site.objects.exclude(active=0).exclude(sitetype='cave room').filter(location=fieldtrip.location)
-        workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
+        # workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
         sites_form = SelectWaterSampleSiteForm(filtered_sites=filtered_sites)
-        worker_form = SelectteamForm(workers=workers)
+        # worker_form = SelectteamForm(workers=workers)
     return render(request, 'new_fieldtrip_sites.html', {'sites_form': sites_form,
-                                                        'worker_form': worker_form,
+                                                        # 'worker_form': worker_form,
                                                         })
 
 def next_site_data(request):
     idfieldtrip_curr = request.session["idfieldtrip_curr"]
     current_idx = request.session.get("current_sample_idx", 0)
     print(current_idx)
+    print(len(request.session["samplenames_curr"]))
     if current_idx >= len(request.session["samplenames_curr"]):
         print("Deleting it!")
         del request.session["current_sample_idx"]
