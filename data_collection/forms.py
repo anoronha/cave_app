@@ -9,7 +9,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div
 
 class NewFieldtripForm(Form):
-    location = forms.ModelChoiceField(queryset=Location.objects.none(),label='Location')
+    location = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'select form-control'}), queryset=Location.objects.none(),label='Location')
     beginfieldtrip = forms.ChoiceField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
                                        label='Trip Start')
     endfieldtrip = forms.ChoiceField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
@@ -19,29 +19,13 @@ class NewFieldtripForm(Form):
                                              label='Field Team',
                                              required=False)
     note = forms.CharField(label='Note',
-                           required=False)
+                           required=False,
+                           widget=forms.Textarea)
     def __init__(self, *args, **kwargs):
         workers = kwargs.pop('workers', Worker.objects.none())
-        # ultrameter = kwargs.pop('ultrameter', Fieldinstrumentname.objects.none())
         super(NewFieldtripForm, self).__init__(*args, **kwargs)
         self.fields['location'].queryset = Location.objects.filter(active=1).filter(locationtype='field trip')
         self.fields['workers'].queryset = workers
-        # self.fields['ultrameter'].queryset = ultrameter
-        # self.helper = FormHelper()
-        # self.helper.add_input(Submit('submit', 'Submit'))
-        # self.helper.layout = Layout(
-        #     Div(
-        #         Div('location', css_class='col-md-3'),
-        #         Div('beginfieldtrip', css_class='col-md-3'),
-        #         Div('endfieldtrip', css_class='col-md-3'),
-        #     css_class='row'),
-        #     Div(
-        #         Div('workers', css_class='col-md-3'),
-        #     css_class='row'),
-        #     Div(
-        #         Div('note', css_class='col-md-6'),
-        #     css_class='row'),
-        #     )
     def clean(self):
         cleaned_data = super(NewFieldtripForm, self).clean()
         beginfieldtrip = cleaned_data.get('beginfieldtrip')

@@ -2,13 +2,80 @@
 {% extends 'layouts/base.html' %}
 {% block title %}Enter - {{ block.super }}{% endblock %}
 {% block content %}
+{% load bootstrap3 %}
+
 <form action="/new-fieldtrip/" method="post">
-  {% csrf_token %}
-    <div class="container">
-      <div class="row">
-        {{ trip_form }}
+ {{ trip_form.non_field_errors }}
+ {% csrf_token %}
+ <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        {% bootstrap_field trip_form.location %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field trip_form.beginfieldtrip %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field trip_form.endfieldtrip %}
       </div>
     </div>
-  <input type="submit" value="Submit" />
+    <div class="row">
+      <div class="col-md-3">
+        {% bootstrap_field trip_form.workers %}
+      </div>
+      <div class="col-md-3">
+        <div id="site-header">
+          <label class="control-label" for="id_sites_0">Sites</label>
+        </div>
+        <div id="site-placeholder">
+          Select a location like a man
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        {% bootstrap_field trip_form.note %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="controls ">
+          <input type="submit" name="submit" value="Save" class="btn btn-primary" id="submit-id-submit"/>
+        </div>
+      </div>
+    </div>
+  </div>
 </form>
+
+<script>
+$(function(){
+  Mustache.tags = ['[[', ']]'];
+  var site_template = $('#site-template').html();
+  Mustache.parse(site_template);
+  $('#id_location').change(function(){
+    var val = $(this).val();
+    if(val == null || $.trim(val) == "") {
+      $('#site-placeholder').empty();
+      return;
+    }
+
+    $.ajax({
+      url: "/api/locations/" + val,
+      success: function(data){
+        var rendered = Mustache.render(site_template, data);
+        $('#site-placeholder').html(rendered);
+      }
+    })
+  });
+});
+</script>
+<script id="site-template" type="x-tmpl-mustache">
+[[#fk_Site_Location]]
+<div class="checkbox">
+  <label for="id_selected_sites_[[idsite]]">
+    <input id="id_selected_sites_[[idsite]]" name="selected_sites" type="checkbox" value="[[idsite]]"> [[site]]
+  </label>
+</div>
+[[/fk_Site_Location]]
+</script>
 {% endblock %}

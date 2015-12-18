@@ -454,7 +454,7 @@ class Lab(models.Model):
     labname = models.CharField(max_length=50, db_column='LabName', unique=True)  # Field name made lowercase.
     institution = models.ForeignKey(Institution, to_field="institution", related_name="fk_Lab_Institution", db_column='Institution', blank=True, null=True)  # Field name made lowercase.
     pi = models.ForeignKey('Worker', to_field="workername", related_name="fk_Lab_PI", db_column='PI', blank=True, null=True)  # Field name made lowercase.
-    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
+    active = models.NullBooleanField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -704,6 +704,8 @@ class Sitetype(models.Model):
     class Meta:
         managed = False
         db_table = 'SiteType'
+        verbose_name = 'Site Type'
+        verbose_name_plural = 'Site Types'
 
     def __str__(self):
         return self.sitetype
@@ -752,7 +754,7 @@ class Worker(models.Model):
     workertype = models.ForeignKey('Workertype', to_field="workertype", related_name="fk_Worker_WorkerType", db_column='WorkerType', blank=True, null=True)  # Field name made lowercase.
     affiliation = models.CharField(max_length=50, db_column='Affiliation', blank=True, null=True)  # Field name made lowercase.
     jobtitle = models.ForeignKey(Jobtitle, to_field="jobtitle", related_name="fk_Worker_JobTitle", db_column='JobTitle', blank=True, null=True)  # Field name made lowercase.
-    active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
+    active = models.NullBooleanField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
     email = models.CharField(max_length=50, db_column='Email', blank=True, null=True)  # Field name made lowercase.
     phonenumber = models.CharField(max_length=50, db_column='PhoneNumber', blank=True, null=True)  # Field name made lowercase.
 

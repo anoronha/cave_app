@@ -1,10 +1,26 @@
 from django.contrib import admin
-from .models import Location, Site, Sitetype, Worker, Bottlesize, Bottletype
+from .models import *
 # Register your models here.
 
 admin.site.register(Location)
+admin.site.register(Locationtype)
 admin.site.register(Site)
 admin.site.register(Sitetype)
 admin.site.register(Worker)
+admin.site.register(Workertype)
 admin.site.register(Bottlesize)
 admin.site.register(Bottletype)
+admin.site.register(Analysis)
+admin.site.register(Analyte)
+admin.site.register(Units)
+admin.site.register(Preservative)
+admin.site.register(Fieldinstrumentname)
+# admin.site.register(Fieldinstrumentcomponent)
+admin.site.register(Fieldinstrumentdetails)
+admin.site.register(Fieldinstrumenttype)
+admin.site.register(Institution)
+admin.site.register(Jobtitle)
+admin.site.register(Lab)
+admin.site.register(Labinstrument)
+admin.site.register(Labinstrumentinterface)
+admin.site.register(Labinstrumentstandard)

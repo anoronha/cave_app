@@ -14,13 +14,10 @@ def index(request):
 def new_fieldtrip(request):
     if request.method == 'POST':
         form = NewFieldtripForm(request.POST)
-        if form.is_valid():
-            print('doot')
-        else:
-            print('fucked up')
         trip_input = {'location':Location.objects.get(pk=request.POST.get('location')),
                       'beginfieldtrip':request.POST.get('beginfieldtrip'),
                       'endfieldtrip':request.POST.get('endfieldtrip')}
+        #right now I'm using a form to do this input because I can't figure out how to get the pk just by putting it straight into the model
         tmp = FieldtripForm(trip_input)
         if tmp.is_valid():
             data = tmp.save()
@@ -31,15 +28,13 @@ def new_fieldtrip(request):
         return HttpResponseRedirect('/new-fieldtrip/select-sites/')
     else:
         workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
-        # ultrameter = Fieldinstrumentname.objects.filter(fieldinstrumenttype='Ultrameter')
-        # spot_co2 = Fieldinstrumentname.objects.filter(fieldinstrumenttype='CO2 Logger')
         trip_form = NewFieldtripForm(workers=workers)
     return render(request, 'new_fieldtrip.html', {'trip_form': trip_form,})
 
 def new_fieldtrip_sites(request):
+    #eventually want to change this to be dynamically generated on the previous page, so once you pick the location the list of sites appears
     if request.method == 'POST':
         sites_form = SelectWaterSampleSiteForm(request.POST)
-        # worker_form = SelectteamForm(request.POST)
         trip_date = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).endfieldtrip
         trip_date = trip_date.strftime('%Y%m%d')
         samplenames_curr = {}
@@ -229,6 +224,9 @@ def enter_site_data(request):
 def alk(request):
     form = AlkalinityForm()
     return render(request, 'alk.html', {'form': form})
+
+def enter_data(request):
+    return render(request, 'enter_data.html',)
 
 def field_instruments(request):
     idfieldtrip_curr = request.session["idfieldtrip_curr"]

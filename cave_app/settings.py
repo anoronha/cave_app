@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'bootstrap3_datetime',
-    'crispy_forms',
+    'bootstrap3',
+    # 'crispy_forms',
         )
 
 MIDDLEWARE_CLASSES = (
@@ -102,9 +103,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
+# CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+BOOTSTRAP3 = {
+    'set_placeholder': False,
+}

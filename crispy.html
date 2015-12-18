@@ -69,22 +69,35 @@
 
 <form  method="post" > <input type='hidden' name='csrfmiddlewaretoken' value='JmzIwbSM6BNHpZKHTebrTWUXqfAHehja' /> <link href="/static/bootstrap3_datetime/css/bootstrap-datetimepicker.min.css" type="text/css" media="all" rel="stylesheet" />
 <script type="text/javascript" src="/static/bootstrap3_datetime/js/moment.min.js"></script>
-<script type="text/javascript" src="/static/bootstrap3_datetime/js/bootstrap-datetimepicker.min.js"></script> <div
-    class="row" > <div
-    class="col-md-3" > <div id="div_id_location" class="form-group"> <label for="id_location" class="control-label  requiredField">
-                Location<span class="asteriskField">*</span> </label> <div class="controls "> <select class="select form-control" id="id_location" name="location">
-<option value="" selected="selected">---------</option>
-<option value="0">Jinapsan Cave</option>
-<option value="2">GWA Well</option>
-<option value="3">Coastal Spring</option>
-</select> </div> </div> </div>
-<div
-    class="col-md-3" > <div id="div_id_beginfieldtrip" class="form-group"> <label for="id_beginfieldtrip" class="control-label  requiredField">
-                Trip Start<span class="asteriskField">*</span> </label> <div class="controls "> <div class="input-group date" id="id_beginfieldtrip_picker"> <input class="form-control datetimepicker form-control" id="id_beginfieldtrip" name="beginfieldtrip" type="text"/> <span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span> </div> <script>
+<script type="text/javascript" src="/static/bootstrap3_datetime/js/bootstrap-datetimepicker.min.js"></script>
+<div class="row">
+  <div class="col-md-3"> 
+    <div id="div_id_location" class="form-group">
+      <label for="id_location" class="control-label  requiredField">Location<span class="asteriskField">*</span></label>
+        <div class="controls ">
+          <select class="select form-control" id="id_location" name="location">
+            <option value="" selected="selected">---------</option>
+            <option value="0">Jinapsan Cave</option>
+            <option value="2">GWA Well</option>
+            <option value="3">Coastal Spring</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div id="div_id_beginfieldtrip" class="form-group">
+        <label for="id_beginfieldtrip" class="control-label  requiredField">Trip Start<span class="asteriskField">*</span></label>
+          <div class="controls "> <div class="input-group date" id="id_beginfieldtrip_picker">
+            <input class="form-control datetimepicker form-control" id="id_beginfieldtrip" name="beginfieldtrip" type="text"/> <span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
+          </div>
+          <script>
             $(function() {
                 $("#id_beginfieldtrip_picker").datetimepicker({"locale": "en-us", "format": "YYYY-MM-DD HH:mm"});
             });
-        </script> </div> </div> </div>
+          </script>
+        </div>
+      </div>
+    </div>
 <div
     class="col-md-3" > <div id="div_id_endfieldtrip" class="form-group"> <label for="id_endfieldtrip" class="control-label  requiredField">
                 Trip End<span class="asteriskField">*</span> </label> <div class="controls "> <div class="input-group date" id="id_endfieldtrip_picker"> <input class="form-control datetimepicker form-control" id="id_endfieldtrip" name="endfieldtrip" type="text"/> <span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span> </div> <script>
