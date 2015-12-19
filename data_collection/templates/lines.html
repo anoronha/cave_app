@@ -1,0 +1,8 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+{% load data_collection_tags %}
+<form action="/lines/" method="post">
+    {% csrf_token %}
+{% endblock %}

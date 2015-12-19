@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^alk/$','data_collection.views.alk', name = 'alk'),
     url(r'^new-fieldtrip/field-instruments/$','data_collection.views.field_instruments', name = 'field_instruments'),
     url(r'^enter-data/$','data_collection.views.enter_data', name = 'enter_data'),
+    # url(r'^lines/$','data_collection.views.lines', name = 'lines'),
 
     # url(r'^alk/$','data_collection.views.samples_collected', name = 'samples-collected'),
     # url(r'^(?P<question_id>[0-9]+)/vote/$', views.new_FieldTrip, name='vote'),

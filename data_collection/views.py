@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from data_collection.forms import *
 from django.forms import formset_factory
 import datetime
+from bokeh.plotting import figure, output_file, show
 
 def index(request):
     return render(request, 'index.html')
@@ -14,6 +15,8 @@ def index(request):
 def new_fieldtrip(request):
     if request.method == 'POST':
         form = NewFieldtripForm(request.POST)
+        sites = request.POST.getlist('selected_sites')
+        print(sites)
         trip_input = {'location':Location.objects.get(pk=request.POST.get('location')),
                       'beginfieldtrip':request.POST.get('beginfieldtrip'),
                       'endfieldtrip':request.POST.get('endfieldtrip')}

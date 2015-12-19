@@ -683,8 +683,8 @@ class Site(models.Model):
     site = models.CharField(max_length=50, db_column='Site', unique=True)  # Field name made lowercase.
     location = models.ForeignKey(Location, to_field="location", related_name="fk_Site_Location", db_column='Location', blank=True, null=True)  # Field name made lowercase.
     sitetype = models.ForeignKey('Sitetype', to_field="sitetype", related_name="fk_Site_SiteType", db_column='SiteType', blank=True, null=True)  # Field name made lowercase.
-    xlocation = models.DecimalField(max_digits=10, decimal_places=5, db_column='XLocation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
-    ylocation = models.DecimalField(max_digits=10, decimal_places=5, db_column='YLocation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    xlocation = models.DecimalField(max_digits=20, decimal_places=10, db_column='XLocation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    ylocation = models.DecimalField(max_digits=20, decimal_places=10, db_column='YLocation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     sitecode = models.CharField(max_length=50, db_column='SiteCode', blank=True, null=True)  # Field name made lowercase.
     note = models.CharField(max_length=500, db_column='Note', blank=True, null=True)  # Field name made lowercase.
     active = models.IntegerField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
