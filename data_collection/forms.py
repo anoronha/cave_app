@@ -8,6 +8,8 @@ from django.utils.safestring import mark_safe
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div
 
+YES_NO = [(True, "Yes"), (False, "No")]
+
 class NewFieldtripForm(Form):
     location = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'select form-control'}), queryset=Location.objects.none(),label='Location')
     beginfieldtrip = forms.ChoiceField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm"}),
@@ -35,36 +37,51 @@ class NewFieldtripForm(Form):
                 raise forms.ValidationError(
                 "You can't start a trip before you end it!"
                 )
-#
-class FieldtripForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super (FieldtripForm, self).__init__(*args, **kwargs)
-    class Meta:
-        model = Fieldtrip
-        fields = ['location','beginfieldtrip','endfieldtrip']
-    def clean(self):
-        cleaned_data = super(FieldtripForm, self).clean()
-        beginfieldtrip = cleaned_data.get('beginfieldtrip')
-        endfieldtrip = cleaned_data.get('endfieldtrip')
-        if beginfieldtrip and endfieldtrip:
-            if endfieldtrip < beginfieldtrip:
-                raise forms.ValidationError(
-                "You can't start a trip before you end it!"
-                )
 
-# class WorkerForm(ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super (WorkerForm, self).__init__(*args, **kwargs)
-#     class Meta:
-#         model = Worker
-#         fields = ['workername', 'workertype','active']
-#         labels = {
-#             'workername': ('Other'),
-#             'workertype': ('Worker Type')
-#             }
-#         widgets = {
-#             'active': HiddenInput(),
-#             }
+
+class WorkerForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super (WorkerForm, self).__init__(*args, **kwargs)
+    class Meta:
+        model = Worker
+        fields = ['idworker','workername','workertype','affiliation','jobtitle','active','email','phonenumber']
+        labels = {
+            'workername': ('Name'),
+            'workertype': ('Work type'),
+            'affiliation': ('Primary affiliation'),
+            'jobtitle': ('Job Title'),
+            'active': ('Currently active'),
+            'email': ('E-mail'),
+            'phonenumber': ('Phone number'),
+            }
+        widgets = {
+            'active': Select(choices=YES_NO),
+            'idworker': TextInput(attrs={'readonly':'readonly'}),
+            }
+
+class ExistingWorkerForm(Form):
+    existing_workers = forms.ModelChoiceField(queryset=Worker.objects.all(),label='Modify existing profile')
+    def __init__(self, *args, **kwargs):
+        super (ExistingWorkerForm, self).__init__(*args, **kwargs)
+
+
+class SitesForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super (SitesForm, self).__init__(*args, **kwargs)
+    class Meta:
+        model = Site
+        fields = ['site','location','sitetype','xlocation','ylocation','sitecode','note','active']
+        labels = {
+            'site': ('Site Name'),
+            'location': ('Location'),
+            'sitetype': ('Site type'),
+            'xlocation': ('Easting (UTM Zone 55N)'),
+            'ylocation': ('Northing (UTM Zone 55N)'),
+            'sitecode': ('Site Code (3-5 letters all caps)'),
+            'note': ('Note'),
+            'active': ('Currently Active')
+            }
 
 
 class SelectWaterSampleSiteForm(Form):

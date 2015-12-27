@@ -12,62 +12,95 @@ from bokeh.plotting import figure, output_file, show
 def index(request):
     return render(request, 'index.html')
 
+
+def permission_holder(request):
+    return render(request, 'permission_holder.html')
+
+
+def success(request):
+    return render(request, 'success.html')
+
+
+def modify_people(request):
+    if request.method == 'POST':
+        print(request.POST)
+        print(request.POST.get('idworker'))
+        new_worker = WorkerForm(request.POST,instance=Worker.objects.get(pk=request.POST.get('idworker')))
+        if new_worker.is_valid():
+            new_worker.save()
+            return HttpResponseRedirect ('/success/')
+        else:
+            return render(request, 'people.html', {'new_worker': new_worker,
+                                                    'existing_workers': ExistingWorkerForm()})
+    else:
+        existing_workers = ExistingWorkerForm()
+        new_worker = WorkerForm()
+    return render(request, 'people.html', {'new_worker': new_worker,
+                                            'existing_workers': existing_workers,})
+
+
+def modify_sites(request):
+    if request.method == 'POST':
+        new_worker = WorkerForm(request.POST)
+        if new_worker.is_valid():
+            new_worker.save()
+        return HttpResponseRedirect ('/success/')
+    else:
+        existing_workers = ExistingWorkerForm()
+        new_worker = WorkerForm()
+    return render(request, 'people.html', {'new_worker': new_worker,
+                                            'existing_workers': existing_workers,})
+
+
+def new_worker(request):
+    if request.method == 'POST':
+        new_worker = NewWorker(request.POST)
+        if new_worker.is_valid():
+            new_worker.save()
+        return HttpResponseRedirect ('/succes/')
+    else:
+        new_worker = NewWorker()
+    return render(request, 'new_worker.html', {'new_worker': new_worker,})
+
+
 def new_fieldtrip(request):
     if request.method == 'POST':
         form = NewFieldtripForm(request.POST)
         sites = request.POST.getlist('selected_sites')
-        print(sites)
-        trip_input = {'location':Location.objects.get(pk=request.POST.get('location')),
-                      'beginfieldtrip':request.POST.get('beginfieldtrip'),
-                      'endfieldtrip':request.POST.get('endfieldtrip')}
-        #right now I'm using a form to do this input because I can't figure out how to get the pk just by putting it straight into the model
-        tmp = FieldtripForm(trip_input)
-        if tmp.is_valid():
-            data = tmp.save()
-            request.session["idfieldtrip_curr"] = data.pk
+        trip_input = Fieldtrip(location=Location.objects.get(pk=request.POST.get('location')),
+                      beginfieldtrip=request.POST.get('beginfieldtrip'),
+                      endfieldtrip=request.POST.get('endfieldtrip'))
+        trip_input.save()
+        request.session["idfieldtrip_curr"] = trip_input.pk
         for key in request.POST.getlist('workers'):
             worker_input = Fieldteam(workername=Worker.objects.get(idworker=key),
-                                     idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
-        return HttpResponseRedirect('/new-fieldtrip/select-sites/')
-    else:
-        workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
-        trip_form = NewFieldtripForm(workers=workers)
-    return render(request, 'new_fieldtrip.html', {'trip_form': trip_form,})
-
-def new_fieldtrip_sites(request):
-    #eventually want to change this to be dynamically generated on the previous page, so once you pick the location the list of sites appears
-    if request.method == 'POST':
-        sites_form = SelectWaterSampleSiteForm(request.POST)
+                                     idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]))
+            worker_input.save()
         trip_date = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]).endfieldtrip
         trip_date = trip_date.strftime('%Y%m%d')
         samplenames_curr = {}
-        for key in request.POST.getlist('selected_sites'):
+        for key in sites:
             current_site = Site.objects.get(idsite=key)
-
             sitecode = current_site.sitecode
             samplename = '%s %s' %(trip_date, sitecode)
             masterlist_input = Samplenamemasterlist(samplename=samplename,
-                                                    sampletype=Sampletype.objects.get(sampletype='groundwater')).save()
+                                                    sampletype=Sampletype.objects.get(sampletype='groundwater'))
+            masterlist_input.save()
             sampledetail_input = Groundwatersampledetails(samplename=Samplenamemasterlist.objects.get(samplename=samplename),
                                                           site=Site.objects.get(idsite=key),
-                                                          idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
-
+                                                          idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"]))
+            sampledetail_input.save()
             samplenames_curr[current_site.site] = samplename
-
         for key in request.POST.getlist('workers'):
             worker_input = Fieldteam(workername=Worker.objects.get(idworker=key),
                                      idfieldtrip=Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])).save()
         request.session["samplenames_curr"] = samplenames_curr
         return HttpResponseRedirect('/enter-site-data/')
     else:
-        fieldtrip = Fieldtrip.objects.get(pk=request.session["idfieldtrip_curr"])
-        filtered_sites = Site.objects.exclude(active=0).exclude(sitetype='cave room').filter(location=fieldtrip.location)
-        # workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
-        sites_form = SelectWaterSampleSiteForm(filtered_sites=filtered_sites)
-        # worker_form = SelectteamForm(workers=workers)
-    return render(request, 'new_fieldtrip_sites.html', {'sites_form': sites_form,
-                                                        # 'worker_form': worker_form,
-                                                        })
+        workers = Worker.objects.exclude(active=0).exclude(workertype='lab').exclude(workertype='supervisory')
+        trip_form = NewFieldtripForm(workers=workers)
+    return render(request, 'new_fieldtrip.html', {'trip_form': trip_form,})
+
 
 def next_site_data(request):
     idfieldtrip_curr = request.session["idfieldtrip_curr"]

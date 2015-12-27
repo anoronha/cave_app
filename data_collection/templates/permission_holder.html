@@ -1,0 +1,9 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+{% load data_collection_tags %}
+<form action="/permission_holder/" method="post">
+    {% csrf_token %}
+    Want to put a page here that'll say you don't have permissions to update this stuff, contact Alexandra
+{% endblock %}

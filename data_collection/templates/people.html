@@ -1,0 +1,75 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Enter - {{ block.super }}{% endblock %}
+{% block content %}
+{% load bootstrap3 %}
+<form action="/people/" method="post">
+ {% csrf_token %}
+ <div class="container">
+   <div class="row">
+     <div class="col-md-3">
+       {% bootstrap_field existing_workers.existing_workers %}
+     </div>
+     <div class="col-md-3">
+       <input type="button" name="new_worker" value="Doot" id="id-new-worker"/>
+     </div>
+   </div>
+    <div class="row">
+      <input id="id_idworker" name="idworker" class="form-control" type="hidden"/>
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.workername %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.workertype %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.affiliation %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.jobtitle %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.active %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.email %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field new_worker.phonenumber %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="controls ">
+          <input type="submit" name="submit" value="Save" class="btn btn-primary" id="submit-id-submit"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+$(function(){
+  Mustache.tags = ['[[', ']]'];
+  var api_target = "/api/workers/[[worker_id]]/";
+  Mustache.parse(api_target);
+  $('#id_existing_workers').change(function(){
+    $.ajax({
+      url: Mustache.render(api_target, {worker_id: $(this).val()}),
+      success: function(data){
+        $.each(data, function(prop, val){
+          if(val === true) val = "True";
+          if(val === false) val = "False";
+
+          $("#id_" + prop).val(val);
+        });
+      }
+    })
+
+  });
+
+
+});
+</script>
+{% endblock %}

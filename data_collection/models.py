@@ -752,9 +752,9 @@ class Worker(models.Model):
     idworker = models.AutoField(db_column='idWorker', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     workername = models.CharField(max_length=50, db_column='WorkerName', unique=True)  # Field name made lowercase.
     workertype = models.ForeignKey('Workertype', to_field="workertype", related_name="fk_Worker_WorkerType", db_column='WorkerType', blank=True, null=True)  # Field name made lowercase.
-    affiliation = models.CharField(max_length=50, db_column='Affiliation', blank=True, null=True)  # Field name made lowercase.
+    affiliation = models.ForeignKey('Institution', to_field="institution", related_name="fk_Worker_Affiliation", db_column='Affiliation', blank=True, null=True)  # Field name made lowercase.
     jobtitle = models.ForeignKey(Jobtitle, to_field="jobtitle", related_name="fk_Worker_JobTitle", db_column='JobTitle', blank=True, null=True)  # Field name made lowercase.
-    active = models.NullBooleanField(db_column='Active', blank=True, null=True)  # Field name made lowercase.
+    active = models.BooleanField(db_column='Active', blank=True)  # Field name made lowercase.
     email = models.CharField(max_length=50, db_column='Email', blank=True, null=True)  # Field name made lowercase.
     phonenumber = models.CharField(max_length=50, db_column='PhoneNumber', blank=True, null=True)  # Field name made lowercase.
 

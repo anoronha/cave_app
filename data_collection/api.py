@@ -9,3 +9,7 @@ class LocationViewSet(viewsets.ModelViewSet):
 class SiteViewSet(viewsets.ModelViewSet):
     queryset = Site.objects.all()
     serializer_class = SiteSerializer
+
+class WorkerViewSet(viewsets.ModelViewSet):
+    queryset = Worker.objects.all()
+    serializer_class = WorkerSerializer

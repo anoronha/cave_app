@@ -2,7 +2,7 @@
 {% extends 'layouts/base.html' %}
 {% block title %}Enter - {{ block.super }}{% endblock %}
 {% block content %}
-{% load data_collection_tags %}
-<form action="/lines/" method="post">
+<form action="/success/" method="post">
     {% csrf_token %}
+    Data entered successfully!
 {% endblock %}
