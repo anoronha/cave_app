@@ -4,15 +4,7 @@ from rest_framework import serializers
 class SiteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Site
-        fields = ('idsite', 'site','sitetype', 'active')
-
-    # def get_queryset(self):
-    #     queryset = Site.objects.all()
-    #     location = self.request.query_params.get('location', None)
-    #     print(location)
-    #     if location is not None:
-    #         queryset = queryset.filter(location=location).filter(active=1)
-    #     return queryset
+        fields = ('idsite', 'site', 'sitetype', 'location', 'active')
 
 class WorkerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

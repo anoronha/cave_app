@@ -6,7 +6,7 @@ from data_collection import api
 
 router = routers.DefaultRouter()
 router.register(r'locations', api.LocationViewSet)
-router.register(r'sites', api.SiteViewSet)
+router.register(r'sites', api.SiteViewSet, base_name="sites")
 router.register(r'workers', api.WorkerViewSet)
 
 urlpatterns = [

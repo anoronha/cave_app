@@ -51,18 +51,23 @@
 $(function(){
   Mustache.tags = ['[[', ']]'];
   var site_template = $('#site-template').html();
+  var url_template = '/api/sites/?is_active=1&location=[[location]]&filter_out=cave%20room'
   Mustache.parse(site_template);
-  $('#id_location').change(function(){
+  Mustache.parse(url_template);
+
+  $('#id_location').change(function() {
     var val = $(this).val();
     if(val == null || $.trim(val) == "") {
       $('#site-placeholder').empty();
       return;
     }
 
+    var name = $(this).find('option:selected').text();
+
     $.ajax({
-      url: "/api/locations/" + val,
-      success: function(data){
-        var rendered = Mustache.render(site_template, data);
+      url: Mustache.render(url_template, {location: name}),
+      success: function(data) {
+        var rendered = Mustache.render(site_template, {sites: data});
         $('#site-placeholder').html(rendered);
       }
     })
@@ -70,12 +75,12 @@ $(function(){
 });
 </script>
 <script id="site-template" type="x-tmpl-mustache">
-[[#fk_Site_Location]]
+[[#sites]]
 <div class="checkbox">
   <label for="id_selected_sites_[[idsite]]">
     <input id="id_selected_sites_[[idsite]]" name="selected_sites" type="checkbox" value="[[idsite]]"> [[site]]
   </label>
 </div>
-[[/fk_Site_Location]]
+[[/sites]]
 </script>
 {% endblock %}
